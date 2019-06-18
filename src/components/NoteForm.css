@@ -1,0 +1,15 @@
+input {
+	margin: 10px 0;
+}
+
+.button-new-tag {
+	margin: 10px 0;
+}
+
+.note-form {
+	text-align: center;
+}
+
+.inputHeaderIsInvalid input {
+	border-color: red;
+}
