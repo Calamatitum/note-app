@@ -108,7 +108,7 @@ class App extends Component {
                 key={index} 
                 onDelete={() => {this.deleteNote(index)}}
                 onEdit={() => {this.editNote(index)}} />
-            ) || <span>Нет совпадений</span>)}
+            ) || <span>Нет совпадений!</span>)}
       			
             {!this.state.searching && (this.state.editing ? 
               (<NoteForm 
