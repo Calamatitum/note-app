@@ -16,7 +16,7 @@ class App extends Component {
       noteData: [], 
       editing: false,
       editingNoteIndex: -1,
-      serching: false,
+      searching: false,
       filteredData: [],
     }
   }
