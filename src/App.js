@@ -7,7 +7,6 @@ import 'antd/dist/antd.css';
 import { Row, Col } from 'antd';
 
 
-
 class App extends Component {
 	constructor(props) {
 		super(props)
