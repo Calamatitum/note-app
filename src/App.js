@@ -1,140 +1,67 @@
-import React, { Component } from 'react';
-
-//import { Layout } from 'element-react/next';
-//import 'element-theme-default';
-
-import './App.css';
-import NoteForm from './components/NoteForm';
+import React, { Component }  from 'react';
 import Note from './components/Note';
-import NavBar from './components/NavBar';
+import NoteForm from './components/NoteForm';
+import Search from './components/Search';
+import EditForm from './components/EditForm';
+import 'antd/dist/antd.css';
+import { Row, Col } from 'antd';
+
+
 
 class App extends Component {
-  constructor() {
-    super();
+	constructor(props) {
+		super(props)
+	}	
+	componentDidMount() {
+    	const { store } = this.props;
+    	this.unsubscribe = store.subscribe(() =>
+      		this.forceUpdate(),
+    	);
+  	}
+  
+  	componentWillUnmount() {
+    	this.unsubscribe();  
+  	}
 
-    this.state = {
-      noteData: [], 
-      editing: false,
-      editingNoteIndex: -1,
-      serching: false,
-      filteredData: [],
-    }
-  }
+	render() {
+		const state = this.props.store.getState();
+		let data;
+		if(state.searching) {
+			data = state.filteredData;
+		} else data = state.notes;
 
-  addNoteData(header, message, tag) {
- //если editing, удалить и вставить
-    const obj = {
-      header: header,
-      message: message,
-      tag: tag,
-      date: new Date(),
-    };    
-    if(this.state.editing) {
-      this.state.noteData.splice(this.state.editingNoteIndex, 1, obj);
-
-      this.setState(state => {
-        return {
-          noteData: [ ...state.noteData],
-          editing: false,
-        }
-      });
-    } else {
-      this.setState(state => {
-        return {
-          noteData: [ ...state.noteData, obj],
-        };
-      });
-    }    
-  }
-
-  deleteNote(index) {
-    this.state.noteData.splice(index, 1);
-
-    this.setState(state => {
-      return {
-        noteData: state.noteData,
-      }
-    });
-  }
-
-  editNote(index) {
-    this.setState(state => {
-      return {
-        editing: true,
-        editingNoteIndex: index,
-      }
-    });
-  }
-
-  filterData(str) {
-    if(str) {
-      this.setState(state => {
-        return {
-          searching: true,
-          filteredData: this.state.noteData.filter((note) => {
-            return note.header.indexOf(str) >= 0 
-            || note.message.indexOf(str) >= 0 
-            || note.tag.filter((tag) => tag.indexOf(str) >= 0).length > 0;
-          })
-        }
-      })
-    } else {
-      this.setState(state => {
-        return {
-          searching: false,
-        }
-      })  
-    }
-  }
-
-  render() {
-    
-    const notes = this.state.noteData;
-    const index = this.state.editingNoteIndex;
-    const filteredNotes = this.state.filteredData;
-    return (      
-      <div className="App">
-      	<section className="el-container">
-      		<header className="el-header">
-      			<NavBar onSearch={this.filterData.bind(this)} />
-      		</header>
-      		<main className="el-main">
-            {this.state.searching && (filteredNotes.length && filteredNotes.map((note, index) => 
-              <Note 
-                header={note.header} 
-                message={note.message} 
-                tag={note.tag}
-                date={note.date} 
-                key={index} 
-                onDelete={() => {this.deleteNote(index)}}
-                onEdit={() => {this.editNote(index)}} />
-            ) || <span>Нет совпадений!</span>)}
-      			
-            {!this.state.searching && (this.state.editing ? 
-              (<NoteForm 
-                app={this} 
-                header={notes[index].header} 
-                message={notes[index].message} 
-                tag={notes[index].tag} />) : 
-              (<NoteForm app={this} />))}     
-
-        		{!this.state.searching && (notes.length && notes.map((note, index) => 
-              <Note 
-                header={note.header} 
-                message={note.message} 
-                tag={note.tag} 
-                date={note.date}
-                key={index} 
-                onDelete={() => {this.deleteNote(index)}}
-                onEdit={() => {this.editNote(index)}} />
-            ) || <span>Нет заметок</span>)}
-      		</main>
-      	</section>
-      </div>
-    );
-  }
+		return (
+			<div>
+				<Row>
+      				<Col span={8} offset={8}>
+      					<Search store={this.props.store} />
+      					{state.editing ? 
+      						(<EditForm store={this.props.store} />) : 
+      						(<NoteForm store={this.props.store} />)
+      					}
+      					<Row type="flex" justify="space-between">
+  							{data.length < 1 ? 
+  								<h3>Нет заметок</h3> : 
+  								(data.map(note =>							
+									<Col span={11}>
+										<Note 
+											header={note.header} 
+											message={note.noteText} 
+											tag={note.tags} 
+											id={note.id}
+											key={note.id}
+											date={note.date}
+											store={this.props.store}
+										/>
+									</Col>
+								))
+							}  							 
+      					</Row>		
+					</Col>
+    			</Row>				
+			</div>
+		)
+	}
 }
 
-export default App;
-
-
+export default App

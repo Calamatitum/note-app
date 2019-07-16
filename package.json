@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "element-react": "^1.4.33",
-    "element-theme-default": "^1.4.13",
+    "antd": "^3.19.8",
     "moment": "^2.24.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -27,5 +26,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "remote-redux-devtools": "^0.5.16"
+  }
 }

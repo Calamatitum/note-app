@@ -1,19 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createStore } from 'redux';
+import devToolsEnhancer from 'remote-redux-devtools';
 
-import './index.css';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
-import { i18n } from 'element-react/next';
-import locale from 'element-react/src/locale/lang/en';
+import noteApp from './reducers/noteApp'
 
-i18n.use(locale);
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const store = createStore(noteApp, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
-//ReactDOM.render(<Button type="primary">Hello</Button>, document.getElementById('root'));
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+ReactDOM.render(<App store={store} />, document.getElementById('root'));
